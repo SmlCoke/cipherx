@@ -387,12 +387,10 @@ Visual Studio Code 是一个轻量级但功能强大的代码编辑器，非常�
                 "-S",
                 "${workspaceFolder}",
                 "-B",
-                "${workspaceFolder}/build",
-                "-G",
-                "MinGW Makefiles"
+                "${workspaceFolder}/build"
             ],
             "problemMatcher": [],
-            "detail": "Configure CMake project"
+            "detail": "Configure CMake project (add -G 'MinGW Makefiles' for Windows MSYS2)"
         }
     ]
 }
@@ -562,11 +560,6 @@ set(SOURCES
 
 # 生成可执行文件
 add_executable(cipherx ${SOURCES})
-
-# 设置输出目录
-set_target_properties(cipherx PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/build
-)
 ```
 
 **配置说明**：
@@ -576,6 +569,8 @@ set_target_properties(cipherx PROPERTIES
 - `include_directories`：指定头文件搜索路径
 - `set(SOURCES ...)`：列出所有源文件
 - `add_executable`：生成名为 cipherx 的可执行文件
+
+**注意**：可执行文件默认会生成在 `build/` 目录中
 
 **文件 3：`.gitignore`**（Git 忽略文件）
 
@@ -681,7 +676,7 @@ Goodbye!
 #### 步骤 7：调试代码
 
 1. **设置断点**
-   - 在 `main.cpp` 的第 `29` 行（`printWelcome();`）点击行号左侧，设置红色断点
+   - 在 `main.cpp` 的 `main()` 函数中，找到 `printWelcome();` 这一行点击行号左侧，设置红色断点
 
 2. **启动调试**
    - 按 `F5` 开始调试
@@ -749,11 +744,16 @@ void printHelp() {
 
 **问题 3：程序运行后中文显示乱码**
 - Windows 用户在终端执行：`chcp 65001`（切换到 UTF-8）
-- 或在代码开头添加：
+- 或在代码的 `main()` 函数开头添加：
   ```cpp
   #ifdef _WIN32
   #include <windows.h>
-  SetConsoleOutputCP(CP_UTF8);
+  // 在 main() 函数开头调用
+  int main() {
+      SetConsoleOutputCP(CP_UTF8);
+      SetConsoleCP(CP_UTF8);
+      // ... 其余代码
+  }
   #endif
   ```
 
@@ -800,11 +800,15 @@ cipherx/
 └── LICENSE               # 许可证
 ```
 
-### 2.3 第一阶段：最小可运行版本（MVP）
+### 2.3 添加加密功能（在基础框架之上）
 
-**注意**：如果你是完全的初学者，请先完成 **2.1.2 节的零基础入门指南**，那里有详细的步骤教你如何创建第一个程序。本节在此基础上继续添加更多功能。
+**前提条件**：
+- 你已经完成了 2.1.2 节的零基础入门指南，有一个能运行的基本 CLI 程序
+- 你熟悉了 VSCode 的编译和调试流程
 
-完成 2.1.2 节后，你应该已经有了一个基本的 CLI 框架。现在我们继续添加加密功能。
+如果你还没有创建基本框架，请先返回 **2.1.2 节**完成基础搭建。
+
+现在我们在已有的框架基础上，添加真正的加密解密功能。
 
 #### 步骤 1：实现命令解析器
 
