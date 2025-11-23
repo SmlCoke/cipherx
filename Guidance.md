@@ -107,17 +107,73 @@ CipherX 是一个交互式命令行加密/解密工具，支持多种加密算�
 
 ### 2.1 开发环境准备
 
-#### Windows 平台
-1. **安装编译器**
-   - 推荐：MinGW-w64 或 Visual Studio Community
-   - MinGW-w64 下载：https://www.mingw-w64.org/
-   - 安装后将 `bin` 目录添加到 PATH 环境变量
+#### Windows 平台（推荐使用 MSYS2）
 
-2. **验证安装**
+**为什么选择 MSYS2？**
+- MSYS2 提供了完整的 Unix-like 环境
+- 包含 g++, clang++, cmake 等现代化工具链
+- 包管理器 pacman 方便安装和更新工具
+- 与 Windows 集成良好，适合 C/C++ 开发
+
+1. **安装 MSYS2**
+   - 下载地址：https://www.msys2.org/
+   - 下载安装程序并运行（推荐安装到 `C:\msys64`）
+   - 安装完成后，打开 MSYS2 UCRT64 终端（推荐使用 UCRT64，兼容性更好）
+
+2. **更新 MSYS2 系统**
+   ```bash
+   pacman -Syu
+   ```
+   如果提示关闭窗口，关闭后重新打开 MSYS2 终端，再次运行：
+   ```bash
+   pacman -Su
+   ```
+
+3. **安装开发工具**
+   ```bash
+   # 安装 GCC/G++ 编译器
+   pacman -S mingw-w64-ucrt-x86_64-gcc
+   
+   # 安装 CMake
+   pacman -S mingw-w64-ucrt-x86_64-cmake
+   
+   # 安装 Make
+   pacman -S mingw-w64-ucrt-x86_64-make
+   
+   # 安装 GDB 调试器
+   pacman -S mingw-w64-ucrt-x86_64-gdb
+   
+   # 安装 Git（如果还没有）
+   pacman -S git
+   ```
+
+4. **配置环境变量**
+   
+   为了在 Windows 命令提示符或 PowerShell 中使用这些工具，需要将 MSYS2 的 bin 目录添加到系统 PATH：
+   
+   - 右键"此电脑" → 属性 → 高级系统设置 → 环境变量
+   - 在"系统变量"中找到 `Path`，点击编辑
+   - 添加以下路径（根据实际安装路径调整）：
+     ```
+     C:\msys64\ucrt64\bin
+     C:\msys64\usr\bin
+     ```
+
+5. **验证安装**
+   
+   打开新的 PowerShell 或命令提示符窗口：
    ```bash
    gcc --version
    g++ --version
+   cmake --version
+   gdb --version
    ```
+   
+   如果显示版本信息，说明安装成功！
+
+**其他选择**：
+- **MinGW-w64**：轻量级选择，下载地址：https://www.mingw-w64.org/
+- **Visual Studio Community**：功能强大的 IDE，包含 MSVC 编译器
 
 #### Linux 平台
 1. **安装 GCC/G++**
@@ -142,6 +198,568 @@ CipherX 是一个交互式命令行加密/解密工具，支持多种加密算�
    ```bash
    gcc --version
    ```
+
+### 2.1.1 配置 VSCode 开发环境（推荐）
+
+Visual Studio Code 是一个轻量级但功能强大的代码编辑器，非常适合 C/C++ 开发。
+
+#### 1. 安装 VSCode
+
+- 下载地址：https://code.visualstudio.com/
+- 下载并安装适合你系统的版本（Windows x64 User Installer 推荐）
+
+#### 2. 安装必要的扩展
+
+打开 VSCode，点击左侧的扩展图标（或按 `Ctrl+Shift+X`），搜索并安装以下扩展：
+
+**必装扩展**：
+1. **C/C++** (Microsoft)
+   - 提供智能代码补全、语法高亮、调试支持
+   - 扩展 ID: `ms-vscode.cpptools`
+
+2. **CMake Tools** (Microsoft)
+   - CMake 项目支持，可视化配置和构建
+   - 扩展 ID: `ms-vscode.cmake-tools`
+
+3. **CMake** (twxs)
+   - CMake 语法高亮和智能提示
+   - 扩展 ID: `twxs.cmake`
+
+**推荐扩展**：
+4. **Chinese (Simplified) Language Pack** (Microsoft)
+   - 中文界面（如果你喜欢中文）
+   - 扩展 ID: `MS-CEINTL.vscode-language-pack-zh-hans`
+
+5. **Code Runner**
+   - 快速运行代码片段
+   - 扩展 ID: `formulahendry.code-runner`
+
+6. **GitLens**
+   - 增强 Git 功能
+   - 扩展 ID: `eamodio.gitlens`
+
+#### 3. 配置 C/C++ 扩展
+
+安装完 C/C++ 扩展后，需要告诉它使用哪个编译器。
+
+1. 在 VSCode 中按 `Ctrl+Shift+P` 打开命令面板
+2. 输入 `C/C++: Edit Configurations (UI)`
+3. 在配置界面中设置：
+   - **编译器路径**：
+     - Windows (MSYS2): `C:/msys64/ucrt64/bin/g++.exe`
+     - Linux: `/usr/bin/g++`
+     - macOS: `/usr/bin/clang++`
+   - **IntelliSense 模式**：
+     - Windows: `windows-gcc-x64`
+     - Linux: `linux-gcc-x64`
+     - macOS: `macos-clang-x64`
+   - **C++ 标准**：`c++11` 或更高
+
+这会在项目目录下创建 `.vscode/c_cpp_properties.json` 文件。
+
+**示例配置文件 `.vscode/c_cpp_properties.json`**（Windows + MSYS2）：
+```json
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "compilerPath": "C:/msys64/ucrt64/bin/g++.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++11",
+            "intelliSenseMode": "windows-gcc-x64"
+        }
+    ],
+    "version": 4
+}
+```
+
+#### 4. 配置 CMake Tools
+
+1. 按 `Ctrl+Shift+P`，输入 `CMake: Select a Kit`
+2. 选择你安装的编译器工具链：
+   - Windows: 选择 `GCC xxx ucrt64` 或类似选项
+   - Linux/macOS: 选择系统的 GCC 或 Clang
+
+3. 在 VSCode 底部状态栏会显示：
+   - 当前选择的工具链
+   - 构建类型（Debug/Release）
+   - 构建按钮
+
+#### 5. 配置调试（launch.json）
+
+创建 `.vscode/launch.json` 文件来配置调试器：
+
+**Windows (MSYS2/MinGW) 配置**：
+```json
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug CipherX",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/cipherx.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "C:/msys64/ucrt64/bin/gdb.exe",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "CMake: build"
+        }
+    ]
+}
+```
+
+**Linux 配置**：
+```json
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug CipherX",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/cipherx",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "CMake: build"
+        }
+    ]
+}
+```
+
+#### 6. 配置构建任务（tasks.json）
+
+创建 `.vscode/tasks.json` 来定义构建任务：
+
+```json
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "CMake: build",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "${workspaceFolder}/build"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"],
+            "detail": "Build the project using CMake"
+        },
+        {
+            "label": "CMake: configure",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "-S",
+                "${workspaceFolder}",
+                "-B",
+                "${workspaceFolder}/build",
+                "-G",
+                "MinGW Makefiles"
+            ],
+            "problemMatcher": [],
+            "detail": "Configure CMake project"
+        }
+    ]
+}
+```
+
+**注意**：Windows 用户如果使用 MSYS2，需要在 cmake 命令中添加 `-G "MinGW Makefiles"` 参数。
+
+#### 7. VSCode 使用技巧
+
+**常用快捷键**：
+- `Ctrl+Shift+B`：构建项目
+- `F5`：启动调试
+- `Ctrl+F5`：运行不调试
+- `F9`：设置/取消断点
+- `F10`：单步执行（跳过函数）
+- `F11`：单步执行（进入函数）
+- `Shift+F11`：跳出函数
+- `Ctrl+Shift+P`：命令面板
+- `Ctrl+`\``：打开终端
+
+**CMake Tools 快捷操作**：
+- 底部状态栏点击 "Build" 按钮直接构建
+- 点击 "Debug" 或 "Release" 切换构建类型
+- 点击 "🔧" 图标快速构建
+
+**调试技巧**：
+1. 在代码行号左侧点击设置断点（红点）
+2. 按 `F5` 开始调试
+3. 使用左侧调试面板查看变量、调用栈、监视表达式
+4. 在"调试控制台"中输入变量名查看值
+
+### 2.1.2 零基础入门：如何开始写第一份代码
+
+这一节专门为完全没有开发过类似项目的初学者准备，手把手教你从零开始。
+
+#### 步骤 1：创建项目目录
+
+1. **在合适的位置创建项目文件夹**
+   
+   例如在 `D:\Projects\` 下：
+   ```bash
+   # Windows (PowerShell 或 CMD)
+   mkdir D:\Projects\cipherx
+   cd D:\Projects\cipherx
+   
+   # Linux/macOS
+   mkdir ~/Projects/cipherx
+   cd ~/Projects/cipherx
+   ```
+
+2. **用 VSCode 打开项目文件夹**
+   
+   - 方法 1：在文件夹中右键 → "通过 Code 打开"（如果安装时勾选了此选项）
+   - 方法 2：打开 VSCode → 文件 → 打开文件夹 → 选择 `cipherx` 目录
+   - 方法 3：在终端中执行 `code .`（前提是 VSCode 已添加到 PATH）
+
+#### 步骤 2：创建项目基本结构
+
+在 VSCode 中创建以下目录和文件：
+
+1. **创建目录**
+   - 在 VSCode 左侧资源管理器中，点击"新建文件夹"图标
+   - 创建 `src` 目录
+   - 创建 `build` 目录（稍后用于存放编译产物）
+
+2. **创建文件**
+   - 在 `src` 目录中创建 `main.cpp` 文件
+   - 在项目根目录创建 `CMakeLists.txt` 文件
+   - 在项目根目录创建 `.gitignore` 文件
+
+你的目录结构现在应该是这样：
+```
+cipherx/
+├── src/
+│   └── main.cpp
+├── build/
+├── CMakeLists.txt
+└── .gitignore
+```
+
+#### 步骤 3：编写第一份代码
+
+**文件 1：`src/main.cpp`**（你的第一个 C++ 程序）
+
+在 VSCode 中打开 `src/main.cpp`，输入以下代码：
+
+```cpp
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+void printWelcome() {
+    cout << "\n";
+    cout << "======================================\n";
+    cout << "  CipherX - Text Encryption Tool     \n";
+    cout << "  Version 0.1.0                      \n";
+    cout << "======================================\n";
+    cout << "\n";
+    cout << "Type 'help' for available commands\n";
+    cout << "\n";
+}
+
+void printHelp() {
+    cout << "Available commands:\n";
+    cout << "  help      Show this help message\n";
+    cout << "  exit      Exit the program\n";
+}
+
+int main() {
+    printWelcome();
+    
+    string command;
+    
+    while (true) {
+        cout << "cipherx> ";
+        getline(cin, command);
+        
+        if (command.empty()) {
+            continue;
+        }
+        
+        if (command == "help") {
+            printHelp();
+        } else if (command == "exit" || command == "quit") {
+            cout << "Goodbye!\n";
+            break;
+        } else {
+            cout << "Unknown command: '" << command << "'\n";
+            cout << "Type 'help' for available commands.\n";
+        }
+    }
+    
+    return 0;
+}
+```
+
+**代码说明**：
+- `#include <iostream>`：包含输入输出流库（用于 cout, cin）
+- `#include <string>`：包含字符串类库
+- `using namespace std;`：使用标准命名空间，简化代码
+- `printWelcome()`：显示欢迎信息的函数
+- `printHelp()`：显示帮助信息的函数
+- `main()`：程序入口函数
+- `while (true)`：无限循环，直到用户输入 exit
+- `getline(cin, command)`：读取用户输入的一整行
+
+**文件 2：`CMakeLists.txt`**（CMake 构建配置）
+
+在项目根目录的 `CMakeLists.txt` 中输入：
+
+```cmake
+cmake_minimum_required(VERSION 3.10)
+project(CipherX VERSION 0.1.0)
+
+# 设置 C++ 标准为 C++11
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# 包含源代码目录
+include_directories(${PROJECT_SOURCE_DIR}/src)
+
+# 源文件列表
+set(SOURCES
+    src/main.cpp
+)
+
+# 生成可执行文件
+add_executable(cipherx ${SOURCES})
+
+# 设置输出目录
+set_target_properties(cipherx PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/build
+)
+```
+
+**配置说明**：
+- `cmake_minimum_required`：要求的最低 CMake 版本
+- `project`：项目名称和版本
+- `set(CMAKE_CXX_STANDARD 11)`：使用 C++11 标准
+- `include_directories`：指定头文件搜索路径
+- `set(SOURCES ...)`：列出所有源文件
+- `add_executable`：生成名为 cipherx 的可执行文件
+
+**文件 3：`.gitignore`**（Git 忽略文件）
+
+```
+# 编译产物
+build/
+*.o
+*.exe
+cipherx
+
+# IDE 配置（可选，有些人喜欢共享 VSCode 配置）
+# .vscode/
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# 调试文件
+*.dSYM/
+```
+
+#### 步骤 4：配置 CMake（首次配置）
+
+1. **打开 VSCode 集成终端**
+   - 按 `Ctrl+`\``` 或 菜单：终端 → 新建终端
+
+2. **创建构建目录并配置 CMake**
+   
+   **Windows (MSYS2)**：
+   ```bash
+   # 确保在项目根目录
+   cd D:\Projects\cipherx
+   
+   # 配置 CMake（使用 MinGW Makefiles）
+   cmake -S . -B build -G "MinGW Makefiles"
+   ```
+   
+   **Linux/macOS**：
+   ```bash
+   # 确保在项目根目录
+   cd ~/Projects/cipherx
+   
+   # 配置 CMake
+   cmake -S . -B build
+   ```
+
+3. **如果使用 CMake Tools 扩展**
+   - 按 `Ctrl+Shift+P`
+   - 输入 `CMake: Configure`
+   - 选择你的编译工具链（Kit）
+   - CMake Tools 会自动完成配置
+
+#### 步骤 5：编译项目
+
+**方法 1：使用终端命令**
+```bash
+# 编译
+cmake --build build
+
+# Windows 下编译后会生成 build/cipherx.exe
+# Linux/macOS 下会生成 build/cipherx
+```
+
+**方法 2：使用 VSCode 快捷键**
+- 按 `Ctrl+Shift+B`（构建）
+- 或点击底部状态栏的 "Build" 按钮
+
+**方法 3：使用 CMake Tools**
+- 点击底部状态栏的 "🔧 Build" 按钮
+
+#### 步骤 6：运行程序
+
+**方法 1：在终端中运行**
+```bash
+# Windows
+.\build\cipherx.exe
+
+# Linux/macOS
+./build/cipherx
+```
+
+**方法 2：使用 VSCode 调试**
+- 按 `F5` 启动调试
+- 或按 `Ctrl+F5` 运行不调试
+
+**预期输出**：
+```
+======================================
+  CipherX - Text Encryption Tool     
+  Version 0.1.0                      
+======================================
+
+Type 'help' for available commands
+
+cipherx> help
+Available commands:
+  help      Show this help message
+  exit      Exit the program
+cipherx> exit
+Goodbye!
+```
+
+#### 步骤 7：调试代码
+
+1. **设置断点**
+   - 在 `main.cpp` 的第 `29` 行（`printWelcome();`）点击行号左侧，设置红色断点
+
+2. **启动调试**
+   - 按 `F5` 开始调试
+   - 程序会在断点处暂停
+
+3. **调试操作**
+   - 查看左侧"变量"面板，可以看到当前作用域的变量
+   - 按 `F10` 单步执行（逐行执行）
+   - 按 `F11` 进入函数内部
+   - 按 `F5` 继续运行到下一个断点
+   - 在"调试控制台"输入变量名查看值
+
+4. **常见调试场景**
+   - 在 `while (true)` 循环内设置断点，观察每次循环的 `command` 变量值
+   - 在条件分支处设置断点，验证程序逻辑是否正确
+
+#### 步骤 8：修改代码并重新编译
+
+现在尝试添加一个新功能：
+
+在 `main.cpp` 中添加版本信息命令：
+
+```cpp
+// 在 main() 函数的 while 循环中，添加新的条件分支
+if (command == "help") {
+    printHelp();
+} else if (command == "version") {
+    cout << "CipherX Version 0.1.0\n";
+    cout << "Built with C++11\n";
+} else if (command == "exit" || command == "quit") {
+    cout << "Goodbye!\n";
+    break;
+} else {
+    // ... 原有代码
+}
+```
+
+同时更新 `printHelp()` 函数：
+```cpp
+void printHelp() {
+    cout << "Available commands:\n";
+    cout << "  help      Show this help message\n";
+    cout << "  version   Show version information\n";
+    cout << "  exit      Exit the program\n";
+}
+```
+
+保存文件后：
+1. 按 `Ctrl+Shift+B` 重新编译
+2. 按 `Ctrl+F5` 运行
+3. 输入 `version` 测试新功能
+
+**恭喜！你已经完成了第一个 CLI 程序，并学会了如何修改和调试代码！** 🎉
+
+#### 步骤 9：常见问题排查
+
+**问题 1：编译失败，提示 "cmake: command not found"**
+- 确认 CMake 已正确安装并添加到 PATH
+- Windows 用户确认 MSYS2 的 bin 目录已添加到系统 PATH
+- 重启 VSCode 和终端
+
+**问题 2：找不到 g++ 或编译器**
+- 检查编译器是否正确安装：`g++ --version`
+- 确认 `.vscode/c_cpp_properties.json` 中的 `compilerPath` 正确
+
+**问题 3：程序运行后中文显示乱码**
+- Windows 用户在终端执行：`chcp 65001`（切换到 UTF-8）
+- 或在代码开头添加：
+  ```cpp
+  #ifdef _WIN32
+  #include <windows.h>
+  SetConsoleOutputCP(CP_UTF8);
+  #endif
+  ```
+
+**问题 4：调试时提示找不到 gdb**
+- 确认 gdb 已安装：`gdb --version`
+- 检查 `.vscode/launch.json` 中的 `miDebuggerPath` 是否正确
 
 ### 2.2 项目结构设计
 
@@ -184,72 +802,11 @@ cipherx/
 
 ### 2.3 第一阶段：最小可运行版本（MVP）
 
-#### 步骤 1：创建主程序框架
+**注意**：如果你是完全的初学者，请先完成 **2.1.2 节的零基础入门指南**，那里有详细的步骤教你如何创建第一个程序。本节在此基础上继续添加更多功能。
 
-**文件：`src/main.cpp`**
-```cpp
-#include <iostream>
-#include <string>
+完成 2.1.2 节后，你应该已经有了一个基本的 CLI 框架。现在我们继续添加加密功能。
 
-using namespace std;
-
-void printWelcome() {
-    cout << "\n";
-    cout << "======================================\n";
-    cout << "  CipherX - Text Encryption Tool     \n";
-    cout << "  Version 0.1.0                      \n";
-    cout << "======================================\n";
-    cout << "\n";
-    cout << "Type 'help' for available commands\n";
-    cout << "\n";
-}
-
-void printHelp() {
-    cout << "Available commands:\n";
-    cout << "  help              Show this help message\n";
-    cout << "  encrypt <text>    Encrypt a string (Caesar cipher)\n";
-    cout << "  decrypt <text>    Decrypt a string (Caesar cipher)\n";
-    cout << "  exit              Exit the program\n";
-}
-
-int main() {
-    printWelcome();
-    
-    string command;
-    
-    while (true) {
-        cout << "cipherx> ";
-        getline(cin, command);
-        
-        if (command.empty()) {
-            continue;
-        }
-        
-        if (command == "help") {
-            printHelp();
-        } else if (command == "exit" || command == "quit") {
-            cout << "Goodbye!\n";
-            break;
-        } else {
-            cout << "Unknown command. Type 'help' for available commands.\n";
-        }
-    }
-    
-    return 0;
-}
-```
-
-**编译和运行**：
-```bash
-# 编译
-g++ -o cipherx src/main.cpp
-
-# 运行
-./cipherx  # Linux/macOS
-cipherx.exe  # Windows
-```
-
-#### 步骤 2：实现命令解析器
+#### 步骤 1：实现命令解析器
 
 **文件：`src/utils/string_utils.h`**
 ```cpp
@@ -764,7 +1321,88 @@ make
 
 ### 3.4 调试技巧
 
-#### 使用 GDB（Linux/macOS）
+#### 使用 VSCode 调试（推荐）
+
+如果你按照 **2.1.1 节**配置了 VSCode 环境，调试非常简单：
+
+**1. 确保已配置 launch.json**（参考 2.1.1 节第 5 步）
+
+**2. 设置断点**
+- 在代码行号左侧点击，出现红色圆点即为断点
+- 或者将光标放在某行，按 `F9` 切换断点
+
+**3. 启动调试**
+- 按 `F5` 开始调试（会自动编译）
+- 或点击左侧调试图标，然后点击绿色播放按钮
+
+**4. 调试控制**
+- `F5`：继续运行（到下一个断点或程序结束）
+- `F10`：单步跳过（执行当前行，不进入函数内部）
+- `F11`：单步进入（进入函数内部）
+- `Shift+F11`：单步跳出（跳出当前函数）
+- `Ctrl+Shift+F5`：重启调试
+- `Shift+F5`：停止调试
+
+**5. 查看变量**
+- **变量面板**：自动显示当前作用域的所有变量
+- **监视面板**：添加你想持续观察的表达式
+- **调用堆栈**：查看函数调用链
+- **调试控制台**：输入变量名或表达式查看值
+
+**6. 调试示例**
+
+假设你想调试凯撒密码的加密过程：
+
+```cpp
+// 在 caesar.cpp 中
+std::string Caesar::encrypt(const std::string& text, int shift) {
+    std::string result = text;  // 在这一行设置断点
+    
+    for (size_t i = 0; i < result.length(); i++) {
+        result[i] = shiftChar(result[i], shift);  // 也可以在这里设置断点
+    }
+    
+    return result;
+}
+```
+
+调试步骤：
+1. 在 `std::string result = text;` 行设置断点
+2. 按 `F5` 启动调试，运行程序
+3. 在程序中执行加密命令：`encrypt "Hello"`
+4. 程序会在断点处暂停
+5. 查看"变量"面板，可以看到 `text` 和 `shift` 的值
+6. 按 `F10` 单步执行，观察 `result` 的变化
+7. 按 `F11` 进入 `shiftChar` 函数内部，查看字符转换过程
+
+**7. 常见调试场景**
+
+**场景 1：程序崩溃**
+- 启用"所有异常时中断"选项
+- 调试器会在异常发生的准确位置停止
+- 查看调用堆栈找出问题根源
+
+**场景 2：变量值不符合预期**
+- 在变量赋值处设置断点
+- 使用"监视"面板添加复杂表达式
+- 单步执行观察值的变化
+
+**场景 3：无限循环**
+- 在循环内设置断点
+- 查看循环变量的值
+- 检查循环退出条件
+
+**8. VSCode 调试技巧**
+
+- **条件断点**：右键断点 → "编辑断点" → 设置条件（如 `i == 5`）
+- **日志点**：不中断程序，仅输出消息到调试控制台
+- **内联值显示**：调试时代码中直接显示变量值
+- **数据断点**：监视变量值的改变
+
+#### 使用命令行 GDB（Linux/macOS，进阶）
+
+如果你不用 VSCode 或需要远程调试：
+
 ```bash
 # 编译时添加调试信息
 g++ -g -o cipherx src/*.cpp
@@ -775,20 +1413,16 @@ gdb ./cipherx
 # GDB 基本命令
 (gdb) run              # 运行程序
 (gdb) break main       # 在 main 函数设置断点
+(gdb) break file.cpp:10  # 在指定文件的第 10 行设置断点
 (gdb) next             # 单步执行（不进入函数）
 (gdb) step             # 单步执行（进入函数）
 (gdb) print variable   # 打印变量值
+(gdb) display variable # 每次停止时自动打印变量
 (gdb) continue         # 继续运行
 (gdb) quit             # 退出
 ```
 
-#### 使用 Visual Studio（Windows）
-1. 用 Visual Studio 打开项目
-2. 设置断点（点击行号左侧）
-3. 按 F5 开始调试
-4. 使用"监视"窗口查看变量值
-
-#### 打印调试
+#### 打印调试（简单但有效）
 ```cpp
 #include <iostream>
 
