@@ -390,13 +390,30 @@ Visual Studio Code 是一个轻量级但功能强大的代码编辑器，非常�
                 "${workspaceFolder}/build"
             ],
             "problemMatcher": [],
-            "detail": "Configure CMake project (add -G 'MinGW Makefiles' for Windows MSYS2)"
+            "detail": "Configure CMake project"
+        },
+        {
+            "label": "CMake: configure (Windows MSYS2)",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "-S",
+                "${workspaceFolder}",
+                "-B",
+                "${workspaceFolder}/build",
+                "-G",
+                "MinGW Makefiles"
+            ],
+            "problemMatcher": [],
+            "detail": "Configure CMake project for Windows MSYS2"
         }
     ]
 }
 ```
 
-**注意**：Windows 用户如果使用 MSYS2，需要在 cmake 命令中添加 `-G "MinGW Makefiles"` 参数。
+**注意**：
+- **Windows MSYS2 用户**：使用 `CMake: configure (Windows MSYS2)` 任务
+- **Linux/macOS 用户**：使用 `CMake: configure` 任务
 
 #### 7. VSCode 使用技巧
 
@@ -409,7 +426,7 @@ Visual Studio Code 是一个轻量级但功能强大的代码编辑器，非常�
 - `F11`：单步执行（进入函数）
 - `Shift+F11`：跳出函数
 - `Ctrl+Shift+P`：命令面板
-- `Ctrl+`\``：打开终端
+- ``Ctrl+` ``：打开终端
 
 **CMake Tools 快捷操作**：
 - 底部状态栏点击 "Build" 按钮直接构建
@@ -595,7 +612,7 @@ Thumbs.db
 #### 步骤 4：配置 CMake（首次配置）
 
 1. **打开 VSCode 集成终端**
-   - 按 `Ctrl+`\``` 或 菜单：终端 → 新建终端
+   - 按 ``Ctrl+` `` 或 菜单：终端 → 新建终端
 
 2. **创建构建目录并配置 CMake**
    
@@ -744,17 +761,21 @@ void printHelp() {
 
 **问题 3：程序运行后中文显示乱码**
 - Windows 用户在终端执行：`chcp 65001`（切换到 UTF-8）
-- 或在代码的 `main()` 函数开头添加：
+- 或在代码中添加以下内容：
   ```cpp
+  // 在文件开头添加
   #ifdef _WIN32
   #include <windows.h>
+  #endif
+  
   // 在 main() 函数开头调用
   int main() {
+      #ifdef _WIN32
       SetConsoleOutputCP(CP_UTF8);
       SetConsoleCP(CP_UTF8);
+      #endif
       // ... 其余代码
   }
-  #endif
   ```
 
 **问题 4：调试时提示找不到 gdb**
