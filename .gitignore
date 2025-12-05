@@ -1,0 +1,15 @@
+# 编译产物
+build/
+*.o
+*.exe
+cipherx
+
+# IDE 配置（可选，有些人喜欢共享 VSCode 配置）
+.vscode/
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# 调试文件
+*.dSYM/
