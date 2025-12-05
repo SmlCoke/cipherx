@@ -19,11 +19,15 @@ void printHelp() {
     cout << "Available commands:\n";
     cout << "  help            Show this help message\n";
     cout << "  exit / quit     Exit the program\n";
+    cout << "  version         Show the version information\n";
 }
 
 // 辅助函数：将字符串转换为小写
 string toLowerCase(string str) {
-    transform(str.begin(), str.end(), str.begin(), ::tolower);
+    // [修改] 使用 lambda 表达式并强制转换为 unsigned char，这是 C++ 标准推荐的安全做法
+    transform(str.begin(), str.end(), str.begin(), [](unsigned char c){ 
+        return std::tolower(c); 
+    });
     return str;
 }
 
@@ -57,6 +61,12 @@ int main() {
                    command == "q") {
             cout << "Goodbye, Thank you for using cipherx project " << cipherx_version << "!\n";
             break;
+        } else if (command == "version" ||
+                   command == "v") {
+            cout << "CipherX - Text Encryption/Decryption Tool\n";
+            cout << "Version: " << cipherx_version << "\n";
+            cout << "Built with C++17\n";
+            cout << "Author: SmlCoke\n";
         } else {
             cout << "Unknown command: '" << command << "'\n";
             cout << "Type 'help' for available commands.\n";

@@ -4,5 +4,17 @@
 - 文本中包含的字符支持中文，英文以及常用的标点符号。
 - 第一版工具采用C/C++实现。
 
+## Directory Tree
+cipherx/  
+├── README.md                          # This documentation  
+├── bin/                               # Compiled binaries
+├── src/                               # Source code directory
+│   ├── utils/                         # Utility functions
+│       ├── string_utils.cpp
+│       ├── string_utils.h
+│   ├── test/                          # Unit tests
+│       ├── test_string_utils.cpp
+│   └── main.cpp                       # Main Program
+├── CMakeLists.txt                     # CMake build configuration
+├── Guidance.md                        # Project guidance and best practices
 
-name: copilot/add-cli-text-encryption-tool

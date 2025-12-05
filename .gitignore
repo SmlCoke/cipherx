@@ -3,6 +3,7 @@ build/
 *.o
 *.exe
 cipherx
+bin/
 
 # IDE 配置（可选，有些人喜欢共享 VSCode 配置）
 .vscode/
