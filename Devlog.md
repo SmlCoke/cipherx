@@ -11,4 +11,4 @@ The CMakeLists.txt and c_cpp_properties.json file for C/C++ development has been
 2. String_utils.cpp has passed all tests.
    1. Test method `CTest`: when some tests fail, `assert` will terminate the program and print an error message. Then this program return a code `1`, that can't be accepted by CMake `CTest`
    2. To ensure Chinese characters are handled correctly, the console encoding has been set to UTF-8.
-   3. To ensure **ii** can be completed in different OS such as Linux and Windows, detailed configuration can be seen in `src/test/test_string_utils.cpp`
+   3. To ensure **ii** can be completed in different OS such as Linux and Windows, detailed configuration can be seen in [`src/utils/string_utils.cpp`](src/utils/string_utils.cpp)
