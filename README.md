@@ -5,6 +5,7 @@
 - 第一版工具采用C/C++实现。
 
 ## Directory Tree
+```
 cipherx/  
 ├── README.md                          # This documentation  
 ├── bin/                               # Compiled binaries
@@ -21,4 +22,4 @@ cipherx/
 │   ├── test_caesar.cpp
 ├── CMakeLists.txt                     # CMake build configuration
 ├── Guidance.md                        # Project guidance and best practices
-
+```
