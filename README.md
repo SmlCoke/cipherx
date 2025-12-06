@@ -1,8 +1,8 @@
 # cipherx
-对文本进行进行多种加密-解密的交互式命令行工具。 
-- 本项目作为SmlCoke开发的第一个长期维护、可被其他用户下载、在多操作系统上运行的小工具。
-- 文本中包含的字符支持中文，英文以及常用的标点符号。
-- 第一版工具采用C/C++实现。
+An interactive command-line tool for multiple encryption and decryption of text.  
+- This project is the first long-term maintained, downloadable, and cross-platform utility developed by SmlCoke.  
+- The text supports Chinese, English, and common punctuation marks.  
+- The first version of the tool is implemented in C/C++.
 
 ## Directory Tree
 ```
