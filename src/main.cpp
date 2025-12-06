@@ -1,9 +1,11 @@
 #include <iostream>
 #include <string>
 #include <algorithm> // 用于 transform
-
+#include <vector>
 using namespace std;
 
+#include "utils/string_utils.h"
+#include "cipher/caesar.h"
 void printWelcome() {
     cout << "\n";
     cout << "======================================\n";
@@ -17,9 +19,11 @@ void printWelcome() {
 
 void printHelp() {
     cout << "Available commands:\n";
-    cout << "  help            Show this help message\n";
-    cout << "  exit / quit     Exit the program\n";
-    cout << "  version         Show the version information\n";
+    cout << "  help                         Show this help message\n";
+    cout << "  exit / quit                  Exit the program\n";
+    cout << "  version                      Show the version information\n";
+    cout << "  encrypt / e <mode> <text>    Encrypt a text\n";
+    cout << "  decrypt / d <mode> <text>    Decrypt a text\n";
 }
 
 // 辅助函数：将字符串转换为小写
@@ -52,12 +56,13 @@ int main() {
 
         // 将命令转换为小写以便比较
         command = toLowerCase(command);
-        
-        if (command == "help") {
+
+        std::vector<std::string> cmd_tokens = split(command, ' ');
+
+        if (cmd_tokens[0] == "help") {
             printHelp();
         } else if (command == "exit" || 
                    command == "quit" ||
-                   command == "e" ||
                    command == "q") {
             cout << "Goodbye, Thank you for using cipherx project " << cipherx_version << "!\n";
             break;
@@ -67,9 +72,43 @@ int main() {
             cout << "Version: " << cipherx_version << "\n";
             cout << "Built with C++17\n";
             cout << "Author: SmlCoke\n";
+        } else if (cmd_tokens[0] == "encrypt" || cmd_tokens[0] == "e") {
+            if (cmd_tokens.size() < 3) {
+                cout << "cipherx> Warning: encrypt usage: encrypt/e <mode> <text>\n";
+                continue;
+            }
+            std::string mode = cmd_tokens[1];
+            std::string text = cmd_tokens[2];
+
+            if (mode == "caesar") {
+                cout << "cipherx> Please input encryption shifter: ";
+                int shifter;
+                cin >> shifter;
+                std::string encrypted = Caesar::encrypt(text, shifter);
+                cout << "cipherx> Encrypted text (Caesar): " << encrypted << "\n";
+            } else {
+                cout << "cipherx> Unknown encryption mode: " << mode << "\n";
+            }
+        } else if (cmd_tokens[0] == "decrypt" || cmd_tokens[0] == "d") {
+            if (cmd_tokens.size() < 3) {
+                cout << "cipherx> Warning: decrypt usage: decrypt/d <mode> <text>\n";
+                continue;
+            }
+            std::string mode = cmd_tokens[1];
+            std::string text = cmd_tokens[2];
+
+            if (mode == "caesar") {
+                cout << "cipherx> Please input decryption shifter: ";
+                int shifter;
+                cin >> shifter;
+                std::string decrypted = Caesar::decrypt(text, shifter);
+                cout << "cipherx> Decrypted text (Caesar): " << decrypted << "\n";
+            } else {
+                cout << "cipherx> Unknown decryption mode: " << mode << "\n";
+            }
         } else {
-            cout << "Unknown command: '" << command << "'\n";
-            cout << "Type 'help' for available commands.\n";
+            cout << "cipherx> Unknown command: '" << command << "'\n";
+            cout << "cipherx> Type 'help' for available commands.\n";
         }
     }
     

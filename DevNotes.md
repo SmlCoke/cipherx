@@ -91,3 +91,27 @@ string toLowerCase(string str) {
 ```
 问题： 在 toLowerCase 函数中，::tolower 接受 int 参数。在某些平台上，如果 char 是有符号的（signed char）且包含非 ASCII 字符（例如用户不小心输入了中文），它可能被转换为负整数，导致 ::tolower 发生未定义行为（崩溃或乱码）。
 修复建议： 在调用 tolower 之前，将字符强制转换为 unsigned char。
+
+
+## 类的静态成员函数
+```cpp
+class Caesar {
+public:
+
+    // 删除默认构造函数，明确表示这个类不应该被实例化
+    Caesar() = delete; 
+
+    // 加密函数
+    static std::string encrypt(const std::string& text, int shift);
+    // fj: 静态成员函数属于类本身，而不属于类的某个具体对象
+    // fj: 因此，不需要创建对象（new Caesar() 或 Caesar c;），直接通过 类名::函数名 即可调用
+    
+    // 解密函数
+    static std::string decrypt(const std::string& text, int shift);
+...
+}
+```
+静态成员函数属于类本身，而不属于类的某个具体对象。 因此，你不需要创建对象（new Caesar() 或 Caesar c;），直接通过 类名::函数名 即可调用。
+
+- 这种设计模式叫什么？
+    这通常被称为 **工具类 (Utility Class)** 或 **静态工厂方法** 的一种变体。 对于像凯撒加密这种“纯函数”逻辑（输入相同，输出永远相同，不依赖任何内部状态），使用静态方法是最佳实践。它避免了无意义的对象创建开销。

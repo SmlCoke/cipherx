@@ -9,27 +9,41 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # 包含头文件目录
 include_directories(src)
 
-# [新增] 启用测试功能
+# 启用测试功能
 enable_testing()
 
+# ==========================================
+# 1. 定义库文件
+# ==========================================
 
-# 1. 定义库文件 (utils)
-# 将 string_utils 编译成一个静态库，方便主程序和测试程序复用
+# 1.1 工具库 (utils)
 add_library(utils_lib src/utils/string_utils.cpp)
-# add_library(utils_lib ...)：告诉 CMake，先把 string_utils.cpp 编译好，打包成一个叫 utils_lib 的库。
 
-# 2. 主程序
+# 1.2 [新增] 加密算法库 (cipher)
+# 将 caesar.cpp 编译成静态库
+add_library(cipher_lib src/cipher/caesar.cpp)
+
+# ==========================================
+# 2. 主程序 (cipherx)
+# ==========================================
 add_executable(cipherx src/main.cpp)
-# 链接 utils 库
-target_link_libraries(cipherx utils_lib)
-# target_link_libraries(cipherx utils_lib)：告诉 CMake，生成 cipherx 可执行文件时，把 utils_lib 里的代码“粘贴”进去。
 
-# 3. 测试程序 (test_string_utils)
-add_executable(test_string_utils src/test/test_string_utils.cpp)
-# 链接 utils 库
+# 链接所有需要的库
+# 主程序既需要字符串工具，也需要加密算法
+target_link_libraries(cipherx utils_lib cipher_lib)
+
+# ==========================================
+# 3. 测试程序
+# ==========================================
+
+# 3.1 String Utils 测试
+add_executable(test_string_utils tests/test_string_utils.cpp)
 target_link_libraries(test_string_utils utils_lib)
-# target_link_libraries(test_string_utils utils_lib)：生成测试程序时，也把 utils_lib “粘贴”进去。
-
-# [新增] 注册测试用例
-# 这样用户在终端输入 "ctest" 即可运行此测试，无需手动执行 ./bin/test_string_utils
 add_test(NAME StringUtilsTest COMMAND test_string_utils)
+
+# 3.2 [新增] Caesar Cipher 测试
+add_executable(test_caesar tests/test_caesar.cpp)
+# 测试程序需要链接 cipher_lib 才能调用 Caesar 类
+target_link_libraries(test_caesar cipher_lib)
+# 注册测试用例，名称为 CaesarTest
+add_test(NAME CaesarTest COMMAND test_caesar)

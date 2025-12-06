@@ -10,11 +10,15 @@ cipherx/
 ├── bin/                               # Compiled binaries
 ├── src/                               # Source code directory
 │   ├── utils/                         # Utility functions
-│       ├── string_utils.cpp
-│       ├── string_utils.h
-│   ├── test/                          # Unit tests
-│       ├── test_string_utils.cpp
+│   │   ├── string_utils.cpp
+│   │   ├── string_utils.h
+│   ├── cipher/                        # Cipher functions
+│   │   ├── caesar.cpp
+│   │   ├── caesar.h
 │   └── main.cpp                       # Main Program
+├── tests/                             # Unit tests
+│   ├── test_string_utils.cpp
+│   ├── test_caesar.cpp
 ├── CMakeLists.txt                     # CMake build configuration
 ├── Guidance.md                        # Project guidance and best practices
 

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <cassert>
-#include "../utils/string_utils.h"
+#include "../src/utils/string_utils.h"
 
 // 确保控制台编码为UTF-8
 // [修改] 跨平台兼容的头文件引入
@@ -37,6 +37,17 @@ int main() {
     assert(result[3] == "is");
     assert(result[4] == "a");
     assert(result[5] == "test");
+
+    // 测试 split 函数
+    std::string str2 = "这      是 一 个 测 试";
+    result = split(str2, delimiter);
+    assert(result.size() == 6);
+    assert(result[0] == "这");
+    assert(result[1] == "是");
+    assert(result[2] == "一");
+    assert(result[3] == "个");
+    assert(result[4] == "测");
+    assert(result[5] == "试");
 
     // 测试 trim 函数
     std::string whitespace = "   hello world   ";
