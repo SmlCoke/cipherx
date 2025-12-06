@@ -55,16 +55,21 @@ jobs:
       with:
         path: artifacts
 
+    # [新增] 重命名文件，防止上传时发生文件名冲突
+    - name: Rename artifacts
+      run: |
+        mv artifacts/cipherx-linux/cipherx artifacts/cipherx-linux/cipherx-linux
+        mv artifacts/cipherx-macos/cipherx artifacts/cipherx-macos/cipherx-macos
+        # Windows 的已经是 .exe 了，通常不需要改，但为了统一也可以改
+        # mv artifacts/cipherx-windows.exe/cipherx.exe artifacts/cipherx-windows.exe/cipherx-windows.exe
+
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
-        # [修改] 注意这里的文件路径匹配
-        # 下载后的结构是: artifacts/<asset_name>/<artifact_name>
-        # 例如 Linux: artifacts/cipherx-linux/cipherx
-        # 例如 Windows: artifacts/cipherx-windows.exe/cipherx.exe
+        # [修改] 指向重命名后的文件
         files: |
-          artifacts/cipherx-linux/cipherx
+          artifacts/cipherx-linux/cipherx-linux
           artifacts/cipherx-windows.exe/cipherx.exe
-          artifacts/cipherx-macos/cipherx
+          artifacts/cipherx-macos/cipherx-macos
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
