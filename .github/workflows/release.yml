@@ -1,0 +1,58 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*' # 当你推送 v0.1.0 这样的标签时触发
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact_name: cipherx-linux
+            asset_name: cipherx-linux
+          - os: windows-latest
+            artifact_name: cipherx.exe
+            asset_name: cipherx-windows.exe
+          - os: macos-latest
+            artifact_name: cipherx
+            asset_name: cipherx-macos
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Configure CMake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+    - name: Build
+      run: cmake --build build --config Release
+
+    - name: Test
+      run: cd build && ctest -C Release
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.asset_name }}
+        path: build/${{ matrix.os == 'windows-latest' && 'Release/' || '' }}${{ matrix.artifact_name }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v3
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          cipherx-linux/cipherx-linux
+          cipherx-windows.exe/cipherx-windows.exe
+          cipherx-macos/cipherx-macos
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
