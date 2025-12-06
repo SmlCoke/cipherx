@@ -23,7 +23,7 @@ jobs:
             asset_name: cipherx-macos
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4 # 推荐升级到 v4
 
     - name: Configure CMake
       run: cmake -B build -DCMAKE_BUILD_TYPE=Release
@@ -34,8 +34,9 @@ jobs:
     - name: Test
       run: cd build && ctest -C Release
 
+    # [修改] 升级到 v4
     - name: Upload Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.asset_name }}
         path: build/${{ matrix.os == 'windows-latest' && 'Release/' || '' }}${{ matrix.artifact_name }}
@@ -44,15 +45,20 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+    # [修改] 升级到 v4
     - name: Download all artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
+      with:
+        path: artifacts # v4 建议指定下载路径，否则会下载到当前目录导致混乱
 
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
+        # [修改] v4 下载后会为每个 artifact 创建子文件夹
+        # 路径格式变为: artifacts/<artifact-name>/<file-name>
         files: |
-          cipherx-linux/cipherx-linux
-          cipherx-windows.exe/cipherx-windows.exe
-          cipherx-macos/cipherx-macos
+          artifacts/cipherx-linux/cipherx-linux
+          artifacts/cipherx-windows.exe/cipherx.exe
+          artifacts/cipherx-macos/cipherx
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
