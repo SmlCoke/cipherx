@@ -14,3 +14,9 @@ Thumbs.db
 
 # 调试文件
 *.dSYM/
+
+
+# 笔记文件
+Guidance.md
+DevNotes/
+*.pdf
