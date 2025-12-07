@@ -1,71 +1,71 @@
 # CipherX 🔐
 
-![Build Status](https://github.com/SmlCoke/cipherx/actions/workflows/release.yml/badge.svg)
-![License](https://img.shields.io/github/license/SmlCoke/cipherx)
-![Release](https://img.shields.io/github/v/release/SmlCoke/cipherx)
+[![Build Status](https://github.com/SmlCoke/cipherx/actions/workflows/release.yml/badge.svg)](https://github.com/SmlCoke/cipherx/actions/workflows/release.yml)
+[![License](https://img.shields.io/github/license/SmlCoke/cipherx)](https://github.com/SmlCoke/cipherx/blob/main/LICENSE)
+[![Release](https://img.shields.io/github/v/release/SmlCoke/cipherx)](https://github.com/SmlCoke/cipherx/releases)
 
-**CipherX** 是一个跨平台的、交互式的命令行文本加密/解密工具。
+**CipherX** is a cross-platform, interactive command-line tool for text encryption and decryption.
 
-作为 SmlCoke 开发的第一个长期维护项目，CipherX 旨在提供轻量、快速且易于使用的加密体验。它基于 C++ 开发，支持 Windows、Linux 和 macOS 操作系统，并完美支持中文、英文及常用标点符号的处理。
+As the first long-term maintained project developed by SmlCoke, CipherX aims to provide a lightweight, fast, and easy-to-use encryption experience. Developed in C++, it supports Windows, Linux, and macOS operating systems, with full support for Chinese, English, and common punctuation marks.
 
-## ✨ 功能特性 (Features)
+## Features
 
-- **多平台支持**：一次编写，处处运行 (Windows / Linux / macOS)。
-- **交互式命令行 (REPL)**：提供友好的交互式 Shell，支持命令补全和历史记录（计划中）。
-- **多种加密算法**：
-  - [x] **Caesar Cipher (凯撒密码)**：经典的位移加密。
-  - [ ] **Vigenère Cipher** (开发中...)
-  - [ ] **Base64** (计划中...)
-- **国际化支持**：底层采用 UTF-8 编码，完美支持中文字符加密。
-- **自动化构建**：基于 CMake 和 GitHub Actions 的自动化构建与发布流程。
+- **Cross-Platform Support**: Write once, run anywhere (Windows / Linux / macOS).
+- **Interactive Command-Line (REPL)**: Provides a user-friendly interactive shell with command completion and history (planned).
+- **Multiple Encryption Algorithms**:
+  - [x] **Caesar Cipher**: Classic shift encryption.
+  - [ ] **Vigenère Cipher** (In development...)
+  - [ ] **Base64** (Planned...)
+- **Internationalization**: Built on UTF-8 encoding, perfectly supporting Chinese character encryption.
+- **Automated Build**: Automated build and release process based on CMake and GitHub Actions.
 
-## 🚀 快速开始 (Getting Started)
+## Getting Started
 
-### 对于普通用户 (User)
+### For Users
 
-你不需要安装任何编程环境，直接下载即可运行。
+You do not need to install any programming environment. Simply download and run.
 
-1. 访问本项目的 [**Releases 页面**](https://github.com/SmlCoke/cipherx/releases)。
-2. 下载对应你操作系统的版本：
-   - **Windows**: 下载 `cipherx-windows.exe`
-   - **Linux**: 下载 `cipherx-linux`
-   - **macOS**: 下载 `cipherx-macos`
-3. **运行**：
-   - Windows: 双击运行或在终端运行。
-   - Linux/macOS: 可能需要赋予执行权限：
+1. Visit the [**Releases Page**](https://github.com/SmlCoke/cipherx/releases) of this project.
+2. Download the version corresponding to your operating system:
+   - **Windows**: Download `cipherx-windows.exe`
+   - **Linux**: Download `cipherx-linux`
+   - **macOS**: Download `cipherx-macos`
+3. **Run**:
+   - Windows: Double-click to run or run in the terminal.
+   - Linux/macOS: You may need to grant execution permissions:
      ```bash
-     chmod +x cipherx-linux  # 或 cipherx-macos
+     chmod +x cipherx-linux  # or cipherx-macos
      ./cipherx-linux
      ```
 
-### 对于开发者 (Developer)
+### For Developers
 
-如果你想从源码编译本项目，请确保你的环境已安装 `CMake (3.10+)` 和 `C++ 编译器 (GCC/Clang/MSVC)`。
+If you want to compile this project from source, please ensure your environment has `CMake (3.10+)` and a `C++ Compiler (GCC/Clang/MSVC)` installed.
 
 ```bash
-# 1. 克隆仓库
+# 1. Clone the repository
 git clone https://github.com/SmlCoke/cipherx.git
 cd cipherx
 
-# 2. 创建构建目录
+# 2. Create a build directory
 mkdir build && cd build
 
-# 3. 配置 CMake
+# 3. Configure CMake
 cmake ..
 
-# 4. 编译
+# 4. Build
 cmake --build .
 
-# 5. 运行测试 (可选但推荐)
+# 5. Run tests (Optional but recommended)
 ctest
 
-# 6. 运行程序
-./cipherx  # Windows 下是 .\Debug\cipherx.exe 或 .\cipherx.exe
+# 6. Run the program
+./cipherx  # On Windows: .\Debug\cipherx.exe or .\cipherx.exe
 ```
 
 
-## 📖 使用指南 (Usage)
-启动程序后，你将进入交互式界面：
+## Usage
+After starting the program, you will enter the interactive interface:
 ```bash
 ======================================
   CipherX - Text Encryption Tool     
@@ -78,23 +78,23 @@ cipherx>
 ```
 
 
-## 📂 项目结构 (Directory Tree)
+## Directory Tree
 ```bash
 cipherx/  
-├── README.md                          # 项目文档
-├── bin/                               # 编译后的二进制文件输出目录
-├── src/                               # 源代码目录
-│   ├── utils/                         # 通用工具模块
-│   │   ├── string_utils.cpp       # 字符串处理实现
+├── README.md                          # Project documentation
+├── bin/                               # Output directory for compiled binaries
+├── src/                               # Source code directory
+│   ├── utils/                         # Utility modules
+│   │   ├── string_utils.cpp           # String processing implementation
 │   │   ├── string_utils.h
-│   ├── cipher/                        # 加密算法模块
-│   │   ├── caesar.cpp             # 凯撒密码实现
+│   ├── cipher/                        # Encryption algorithm modules
+│   │   ├── caesar.cpp                 # Caesar cipher implementation
 │   │   ├── caesar.h
-│   └── main.cpp                       # 程序入口与交互逻辑
-├── tests/                             # 单元测试目录
+│   └── main.cpp                       # Program entry and interaction logic
+├── tests/                             # Unit tests directory
 │   ├── test_string_utils.cpp
 │   ├── test_caesar.cpp
-├── CMakeLists.txt                     # CMake 构建配置
-├── .github/workflows/                 # GitHub Actions 自动化配置
-└── Guidance.md                        # 开发指南
+├── CMakeLists.txt                     # CMake build configuration
+├── .github/workflows/                 # GitHub Actions automation configuration
+└──
 ```
