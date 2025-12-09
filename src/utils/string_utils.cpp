@@ -34,3 +34,40 @@ std::string trim(const std::string& str) {
     return str.substr(start, end - start + 1);
     // 1205: std.substr(start, length): 从start位置开始，读取length个字符
 }
+
+// [20251209新增] 智能解析实现
+std::vector<std::string> parseCommandLine(const std::string& line) {
+    std::vector<std::string> args;
+    std::string currentArg;
+    bool inQuotes = false; // 状态标记：当前是否在引号内
+
+    for (size_t i = 0; i < line.length(); ++i) {
+        char c = line[i];
+
+        if (c == '"') {
+            inQuotes = !inQuotes; // 切换状态
+            continue; // 跳过引号本身，不存入结果
+        }
+
+        // 1209: 如果遇到空格，且不在引号内，说明一个参数结束了
+        if (c == ' ' && !inQuotes) {
+            if (!currentArg.empty()) {
+                // 1209: 如果用户在两个参数之间输入了连续多个空格，也会被本条分支处理
+                // 1209: 即此时currentArg.empty() = 1
+                args.push_back(currentArg);
+                currentArg.clear();
+            }
+        } else {
+            // 其他情况（在引号内的空格，或者普通字符），都加入当前参数
+            currentArg += c;
+        }
+    }
+
+    // 1209: 处理最后一个参数
+    // 1209: 遇到这个分支的情况就是，用户在输入完命令后多输入了一个空格
+    if (!currentArg.empty()) {
+        args.push_back(currentArg);
+    }
+
+    return args;
+}

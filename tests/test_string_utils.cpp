@@ -54,6 +54,23 @@ int main() {
     std::string trimmed = trim(whitespace);
     assert(trimmed == "hello world");
 
+
+    // 测试parseCommandLine函数
+    std::string str3 = "e caesar \"hello world\"";
+    result = parseCommandLine(str3);
+    assert(result.size() == 3);
+    assert(result[0] == "e");
+    assert(result[1] == "caesar");
+    assert(result[2] == "hello world");
+
+    // 测试parseCommandLine函数
+    std::string str4 = "e    caesar   \"hello     world\"    ";
+    result = parseCommandLine(str4);
+    assert(result.size() == 3);
+    assert(result[0] == "e");
+    assert(result[1] == "caesar");
+    assert(result[2] == "hello     world");
+
     // [保留] 现在可以放心地输出中文了
     std::cout << "全部测试通过！" << std::endl;
     return 0;
